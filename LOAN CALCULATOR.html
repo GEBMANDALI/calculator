@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8">
+  <title> Gujarati EMI Fixed Interest Calculator</title>
+  <style>
+    body {
+      font-family: 'Noto Sans Gujarati', sans-serif;
+      background: linear-gradient(to right, #dfe6e9, #b2bec3);
+      padding: 40px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+    h2 {
+      text-align: center;
+      color: #2d3436;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-size: 18px;
+      color: #2d3436;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      font-size: 17px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background-color: #f1f2f6;
+    }
+    input[readonly] {
+      background-color: #dcdde1;
+      cursor: not-allowed;
+      color: #636e72;
+    }
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      background-color: #0984e3;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #74b9ff;
+    }
+    table {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: collapse;
+      background: white;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 12px;
+      text-align: center;
+      font-size: 16px;
+    }
+    th {
+      background-color: #dfe6e9;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2> ધી જી.ઈ.બી. ના કર્મચારીઓની ધિરાણ અને </h2>
+    <h2> ગ્રાહક સહકારી મંડળી લી., ડીસા. </h2>
+<h2> વ્યાજની ગણતરી </h2>
+  <label>લોન રકમ (₹):</label>
+  <input type="number" id="loanAmount" value="100000">
+
+  <label>સમયગાળો (મહિના):</label>
+  <input type="number" id="months" value="10">
+
+  <label>વ્યાજ દર (%):</label>
+  <input type="number" id="rate" value="10" readonly>
+
+  <button onclick="calculateEMI()">વિગત બતાવો</button>
+<h3><strong> નોંધ: આ ગણતરી દરેક સભાસદની સમજણ માટે છે. જેમાં સામાન્ય ફેરફાર હોઈ શકે છે.</strong> </h3>
+
+  <div id="result"></div>
+</div>
+
+<script>
+function calculateEMI() {
+  const loan = parseFloat(document.getElementById("loanAmount").value);
+  const months = parseInt(document.getElementById("months").value);
+  const rate = 10; // Fixed 10%, field is read-only
+  const monthlyRate = rate / 12 / 100;
+
+  let balance = loan;
+  let totalInterest = 0;
+  let table = `<table><tr><th>મહિનો</th><th>Principal</th><th>Interest</th></tr>`;
+
+  for (let i = 1; i <= months; i++) {
+    const interest = balance * monthlyRate;
+    totalInterest += interest;
+    table += `<tr>
+      <td>${i}</td>
+      <td>₹ ${balance.toFixed(0)}</td>
+      <td>₹ ${interest.toFixed(0)}</td>
+    </tr>`;
+    balance -= loan / months;
+  }
+
+  const totalAmount = loan + totalInterest;
+  const emi = totalAmount / months;
+
+  table += `</table><br>
+  <strong>કુલ વ્યાજ:</strong> ₹ ${totalInterest.toFixed(2)}<br>
+  <strong>દરમહિને લોનનો હપ્તો :</strong> ₹ ${emi.toFixed(2)}<br><br>
+  <em>દર મહિને ₹ ${emi.toFixed(0)} હપ્તો + ફરજિયાત બચત ₹ 1000 પગારમાંથી કપાત થશે</em>`;
+  
+  document.getElementById("result").innerHTML = table;
+
+}
+</script>
+
+</body>
+</html>
